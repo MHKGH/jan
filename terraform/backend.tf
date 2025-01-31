@@ -1,4 +1,4 @@
-
+/*
 terraform {
   backend "s3" {
     bucket = "terraform-state-bucket-6010"
@@ -7,5 +7,5 @@ terraform {
     dynamodb_table = "terraform-state-lock"
   }
 }
-
+*/
 
