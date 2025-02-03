@@ -56,7 +56,7 @@ environment {
                 dir("${env.SSH_DIR}"){
                       sh '''ls -alR
                       echo "$public_ip"
-                      ssh-keyscan -H $public_ip >> known_hosts
+                      ssh-keyscan -H $public_ip >> known_hosts '''
                             
                 }
             }
