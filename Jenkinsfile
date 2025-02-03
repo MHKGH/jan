@@ -41,22 +41,32 @@ environment {
             }
         }
 
-        stage('Executing bash script') {
-            steps {
-                    sh '''#!/bin/bash
-                    cd /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/terraform
-                    public_ip=$(cat terraform.tfstate | jq -r \'.resources[] | select(.type=="aws_instance") | .instances[0].attributes.public_ip\')
-                    echo "[ec2]" > /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/inventory.ini
-                    echo "$public_ip ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/inventory.ini
-                    '''
-                }
-            }
+       stage('Executing bash script') {
+         steps {
+           script {
+             def public_ip = sh(
+                script: '''#!/bin/bash
+                cd /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/terraform
+                cat terraform.tfstate | jq -r '.resources[] | select(.type=="aws_instance") | .instances[0].attributes.public_ip'
+                ''',
+                returnStdout: true
+             ).trim()
+
+             sh """
+             echo "[ec2]" > /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/inventory.ini
+             echo "$public_ip ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/inventory.ini
+             """
+
+             env.public_add = public_ip
+           }
+        }
+      }
         stage('Copying public key to ssh/known_hosts file') {
             steps{
                 dir("${env.SSH_DIR}"){
                       sh '''ls -alR
                       echo "${public_ip}"
-                      ssh-keyscan -H $public_ip >> known_hosts '''
+                      ssh-keyscan -H ${env.public_add} >> known_hosts '''
                             
                 }
             }
