@@ -68,7 +68,8 @@ environment {
                         sh """
                         ls -alR
                         echo "${env.public_add}"
-                        ssh-keyscan -H ${env.public_add} >> known_hosts
+                        ssh-keyscan -V -H ${env.public_add} >> known_hosts
+                        cat known_hosts
                         """
                     }
                 }
