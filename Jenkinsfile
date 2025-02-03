@@ -51,6 +51,13 @@ environment {
                     echo "$public_ip" > /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/Host_IP.txt'''
                 }
             }
+        
+        stage('Executing Local Bash Script') {
+            step {
+                sh '/Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/known_hosts.sh'
+            }
+            
+        }
 
         stage('Run Ansible Playbook') {
             steps {
