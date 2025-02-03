@@ -51,11 +51,12 @@ environment {
                     '''
                 }
             }
-        stage('Copying public key to ssh/known_hosts file'){
+        stage('Copying public key to ssh/known_hosts file') {
             steps{
-                dir("${env.SSH_DIR}")
-                      sh 'll'
-                      sh 'ssh-keyscan -H $public_ip >> known_hosts'               
+                dir("${env.SSH_DIR}"){
+                      sh 'ls -alR'
+                      sh 'ssh-keyscan -H $public_ip >> known_hosts'
+                }
             }
         }
         
