@@ -62,12 +62,15 @@ environment {
         }
       }
         stage('Copying public key to ssh/known_hosts file') {
-            steps{
-                dir("${env.SSH_DIR}"){
-                      sh '''ls -alR
-                      echo "${public_ip}"
-                      ssh-keyscan -H ${env.public_add} >> known_hosts '''
-                            
+            steps {
+                script {
+                    dir("${env.SSH_DIR}") {
+                        sh """
+                        ls -alR
+                        echo "${env.public_add}"
+                        ssh-keyscan -H ${env.public_add} >> known_hosts
+                        """
+                    }
                 }
             }
         }
