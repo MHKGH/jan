@@ -53,7 +53,7 @@ environment {
             }
         
         stage('Executing Local Bash Script') {
-            step {
+            steps {
                 sh '/Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/known_hosts.sh'
             }
             
