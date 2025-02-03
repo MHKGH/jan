@@ -6,6 +6,7 @@ pipeline {
 
 environment {
     PATH = "/opt/homebrew/bin:$PATH"
+    SSH_DIR = "/Users/hemanthkumarmotukuri/.ssh"
     TERRAFORM_DIR = "/Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/terraform"
     ANSIBLE_DIR = "/Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible"
 }
@@ -47,9 +48,15 @@ environment {
                     public_ip=$(cat terraform.tfstate | jq -r \'.resources[] | select(.type=="aws_instance") | .instances[0].attributes.public_ip\')
                     echo "[ec2]" > /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/inventory.ini
                     echo "$public_ip ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> /Users/hemanthkumarmotukuri/Documents/DevOps/Practice/my_self_practic/nallagandla/ansible/inventory.ini
-                    ssh-keyscan -H $public_ip >> /Users/hemanthkumarmotukuri/.ssh/known_hosts'''
+                    '''
                 }
             }
+        stage('Copying public key to ssh/known_hosts file'){
+            steps{
+                dir("${env.SSH_DIR}")
+                      sh 'ssh-keyscan -H $public_ip >> known_hosts'               
+            }
+        }
         
 
 
